@@ -75,8 +75,8 @@ public class LoginActivity extends AppCompatActivity {
                 editor.putString("full_name", response.getFullName());
                 editor.apply();
 
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                //startActivity(intent);
                 finish();
             }
 
@@ -102,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                //startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
             }
 
             @Override
