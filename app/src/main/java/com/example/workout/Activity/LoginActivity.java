@@ -1,4 +1,4 @@
-package com.example.workout.Activity;
+package com.example.myapplication.Activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,16 +10,23 @@ import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.workout.Domain.DTO.LoginResponse;
-import com.example.workout.R;
-import com.example.workout.Service.UserService;
-import com.example.workout.Utils.ValidationUtil;
+
+import com.example.myapplication.Domain.DTO.LoginResponse;
+import com.example.myapplication.Domain.User;
+import com.example.myapplication.R;
+import com.example.myapplication.Service.UserService;
+import com.example.myapplication.Utils.AdminInitializer;
+import com.example.myapplication.Utils.ValidationUtil;
+
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -33,6 +40,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // Initialize admin user if not exists
+        AdminInitializer.initializeAdminIfNeeded(this);
 
         usernameEditText = findViewById(R.id.usernameEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
@@ -73,16 +83,50 @@ public class LoginActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString("user_id", response.getUserId());
                 editor.putString("full_name", response.getFullName());
+                
+                // Determine role: if username is "admin", force role to ADMIN
+                // Otherwise use the role from response (or default to USER)
+                String role = response.getRole() != null ? response.getRole() : "USER";
+                if ("admin".equalsIgnoreCase(username)) {
+                    role = "ADMIN";
+                    Log.d("LoginActivity", "Username is 'admin', forcing role to ADMIN");
+                }
+                editor.putString("user_role", role);
                 editor.apply();
 
-                //Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                //startActivity(intent);
+                Log.d("LoginActivity", "Login successful - Username: " + username + ", User ID: " + response.getUserId() + ", Role: " + role);
+
+                // Redirect to AdminActivity if role is ADMIN
+                Intent intent;
+                if ("ADMIN".equalsIgnoreCase(role)) {
+                    Log.d("LoginActivity", "Redirecting to AdminActivity");
+                    intent = new Intent(LoginActivity.this, AdminActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                } else {
+                    Log.d("LoginActivity", "Redirecting to MainActivity");
+                    intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                }
+                startActivity(intent);
                 finish();
             }
 
             @Override
             public void onError(String message) {
-                showError(message);
+                // If login failed with admin credentials, try to create admin user
+                if ("admin".equalsIgnoreCase(username) && message.contains("Incorrect")) {
+                    Log.d("LoginActivity", "Login failed for admin - attempting to create admin user");
+                    showError("Admin account not found. Creating admin account, please wait...");
+                    AdminInitializer.forceCreateAdmin(LoginActivity.this);
+                    
+                    // Retry login after 2 seconds
+                    errorTextView.postDelayed(() -> {
+                        Log.d("LoginActivity", "Retrying login after creating admin user");
+                        login(username, password);
+                    }, 2000);
+                } else {
+                    showError(message);
+                }
             }
         });
     }
