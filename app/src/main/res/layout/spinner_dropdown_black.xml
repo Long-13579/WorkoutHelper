@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
     app:cardCornerRadius="20dp"
-    app:cardElevation="10dp">
+    app:cardElevation="8dp"
+    android:stateListAnimator="@animator/card_press_anim">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,23 +16,17 @@
         android:padding="24dp"
         android:background="@drawable/bg_gradient_ripple"
         android:clickable="true"
-        android:focusable="true">
+        android:contentDescription="Open Android dashboard">
 
         <ImageView
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/ic_android"
-            android:tint="@android:color/white"
-            android:layout_marginBottom="12dp"/>
+            android:tint="@android:color/white"/>
 
         <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Android Dashboard"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"/>
+            style="@style/TextCardTitle"
+            android:text="Android Dashboard"/>
 
     </LinearLayout>
 
