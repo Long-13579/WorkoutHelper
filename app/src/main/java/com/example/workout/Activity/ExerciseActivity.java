@@ -1,4 +1,4 @@
-package com.example.myapplication.Activity;
+package com.example.workout.Activity;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -19,15 +19,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.example.myapplication.Domain.Exercise;
-import com.example.myapplication.Domain.Plan;
-import com.example.myapplication.Domain.Set;
-import com.example.myapplication.Domain.Workout;
-import com.example.myapplication.Enum.MuscleEnum;
-import com.example.myapplication.R;
-import com.example.myapplication.Service.PlanService;
-import com.example.myapplication.Service.WorkoutService;
-import com.example.myapplication.databinding.ActivityExerciseBinding;
+import com.example.workout.Domain.Exercise;
+import com.example.workout.Domain.Plan;
+import com.example.workout.Domain.Set;
+import com.example.workout.Domain.Workout;
+import com.example.workout.Enum.MuscleEnum;
+import com.example.workout.R;
+import com.example.workout.Service.PlanService;
+import com.example.workout.Service.WorkoutService;
+import com.example.workout.databinding.ActivityExerciseBinding;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

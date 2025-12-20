@@ -1,6 +1,6 @@
-package com.example.myapplication.ApiClient;
+package com.example.workout.ApiClient;
 
-import com.example.myapplication.Domain.Exercise;
+import com.example.workout.Domain.Exercise;
 
 import java.util.List;
 
