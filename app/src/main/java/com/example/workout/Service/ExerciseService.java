@@ -1,9 +1,9 @@
-package com.example.myapplication.Service;
+package com.example.workout.Service;
 
-import com.example.myapplication.ApiClient.ApiClient;
-import com.example.myapplication.ApiClient.BodyTrackApiService;
-import com.example.myapplication.ApiClient.ExerciseApiService;
-import com.example.myapplication.Domain.Exercise;
+import com.example.workout.ApiClient.ApiClient;
+import com.example.workout.ApiClient.BodyTrackApiService;
+import com.example.workout.ApiClient.ExerciseApiService;
+import com.example.workout.Domain.Exercise;
 
 import java.util.List;
 

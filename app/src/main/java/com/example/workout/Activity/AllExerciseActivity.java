@@ -1,4 +1,4 @@
-package com.example.myapplication.Activity;
+package com.example.workout.Activity;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -9,11 +9,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.myapplication.Adapter.SmallExerciseAdapter;
-import com.example.myapplication.Domain.Exercise;
-import com.example.myapplication.Enum.MuscleEnum;
-import com.example.myapplication.Service.ExerciseService;
-import com.example.myapplication.databinding.ActivityAllExerciseBinding;
+import com.example.workout.Adapter.SmallExerciseAdapter;
+import com.example.workout.Domain.Exercise;
+import com.example.workout.Enum.MuscleEnum;
+import com.example.workout.Service.ExerciseService;
+import com.example.workout.databinding.ActivityAllExerciseBinding;
 
 import java.util.ArrayList;
 import java.util.List;

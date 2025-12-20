@@ -1,4 +1,4 @@
-package com.example.myapplication.Adapter;
+package com.example.workout.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,10 +11,10 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.myapplication.Activity.ExerciseActivity;
-import com.example.myapplication.Domain.Exercise;
-import com.example.myapplication.Enum.MuscleEnum;
-import com.example.myapplication.databinding.ViewholderExerciseSmallBinding;
+import com.example.workout.Activity.ExerciseActivity;
+import com.example.workout.Domain.Exercise;
+import com.example.workout.Enum.MuscleEnum;
+import com.example.workout.databinding.ViewholderExerciseSmallBinding;
 
 import java.util.ArrayList;
 import java.util.List;
