@@ -4,19 +4,35 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="8dp"
-    app:cardUseCompatPadding="true">
+    app:cardCornerRadius="20dp"
+    app:cardElevation="10dp">
 
-    <TextView
-        android:id="@+id/tvTitle"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Welcome to Android App"
-        android:textColor="#212121"
-        android:textSize="22sp"
-        android:textStyle="bold"
+        android:orientation="vertical"
         android:gravity="center"
-        android:padding="24dp" />
+        android:padding="24dp"
+        android:background="@drawable/bg_gradient_ripple"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_android"
+            android:tint="@android:color/white"
+            android:layout_marginBottom="12dp"/>
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Android Dashboard"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
 
 </androidx.cardview.widget.CardView>
