@@ -19,7 +19,171 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-       
+        <LinearLayout
+            android:id="@+id/surveyForm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <!-- Plan Name -->
+            <TextView
+                android:id="@+id/planNameLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Plan Name"
+                android:textColor="@color/white"
+                android:textSize="28sp"
+                android:layout_marginTop="28dp"/>
+
+            <EditText
+                android:id="@+id/planNameTxt"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:background="@drawable/edittext_bg"
+                android:layout_marginTop="16dp"
+                android:hint="Plan Name"
+                android:textColorHint="@color/white"
+                android:textColor="@color/white"
+                android:textAlignment="center"/>
+
+            <!-- Training Goal -->
+            <TextView
+                android:id="@+id/goalLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Training Goal"
+                android:textColor="@color/white"
+                android:textSize="28sp"
+                android:layout_marginTop="28dp"/>
+            <Spinner
+                android:id="@+id/goalSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:background="@drawable/edittext_bg"
+                android:layout_marginTop="16dp"/>
+
+            <!-- Sessions per Week -->
+            <!-- Days of the Week Selection -->
+            <TextView
+                android:id="@+id/sessionsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Choose Days to Exercise"
+                android:textColor="@color/white"
+                android:textSize="28sp"
+                android:layout_marginTop="28dp"/>
+
+            <GridLayout
+                android:id="@+id/daysGrid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:alignmentMode="alignMargins"
+                android:columnCount="3"
+                android:rowCount="3"
+                android:useDefaultMargins="true">
+
+                <ToggleButton
+                    android:id="@+id/btnMonday"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:textOn="Mon"
+                    android:textOff="Mon"
+                    android:background="@drawable/day_toggle_selector"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ToggleButton
+                    android:id="@+id/btnTuesday"
+                    android:textOn="Tue"
+                    android:textOff="Tue"
+                    android:background="@drawable/day_toggle_selector"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ToggleButton
+                    android:id="@+id/btnWednesday"
+                    android:textOn="Wed"
+                    android:textOff="Wed"
+                    android:background="@drawable/day_toggle_selector"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            
+                    android:id="@+id/btnSunday"
+                    android:textOn="Sun"
+                    android:textOff="Sun"
+                    android:background="@drawable/day_toggle_selector"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </GridLayout>
+
+
+            <!-- Training Level -->
+            <TextView
+                android:id="@+id/levelLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Training Level"
+                android:textColor="@color/white"
+                android:textSize="28sp"
+                android:layout_marginTop="28dp"/>
+            <Spinner
+                android:id="@+id/levelSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:background="@drawable/edittext_bg"
+                android:layout_marginTop="16dp"/>
+
+            <!-- Injury History -->
+            <TextView
+                android:id="@+id/injuryLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Previous Injury?"
+                android:textColor="@color/white"
+                android:textSize="28sp"
+                android:layout_marginTop="28dp"/>
+            <RadioGroup
+                android:id="@+id/injuryGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp"
+                android:gravity="center_horizontal">
+
+                <RadioButton
+                    android:id="@+id/injuryYes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Yes"
+                    android:textSize="24sp"
+                    android:textColor="@color/white"/>
+
+                <RadioButton
+                    android:id="@+id/injuryNo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No"
+                    android:textSize="24sp"
+                    android:textColor="@color/white"/>
+            </RadioGroup>
+
+            <!-- Submit Button -->
+            <Button
+                android:id="@+id/submitSurveyBtn"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:text="Submit Survey"
+                android:textSize="24sp"
+                android:backgroundTint="@color/orange"
+                android:textColor="@color/white"
+                android:layout_marginTop="36dp"/>
+        </LinearLayout>
     </ScrollView>
     <!-- Bottom Navigation -->
     <com.example.myapplication.Activity.NavigationComponent
