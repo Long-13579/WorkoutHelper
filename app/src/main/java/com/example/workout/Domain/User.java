@@ -1,4 +1,4 @@
-package com.example.workout.Domain;
+package com.example.myapplication.Domain;
 
 import androidx.annotation.NonNull;
 
@@ -13,9 +13,10 @@ public class User implements Serializable {
     private String phoneNumber;
     private String dateOfBirth;
     private String gender;
+    private String role; // "USER" or "ADMIN"
 
     public User(String id, String username, String password, String fullName, String email,
-                String phoneNumber, String dateOfBirth, String gender) {
+                String phoneNumber, String dateOfBirth, String gender, String role) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -24,6 +25,12 @@ public class User implements Serializable {
         this.phoneNumber = phoneNumber;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
+        this.role = role;
+    }
+    
+    public User(String id, String username, String password, String fullName, String email,
+                String phoneNumber, String dateOfBirth, String gender) {
+        this(id, username, password, fullName, email, phoneNumber, dateOfBirth, gender, "USER");
     }
 
     public User() {}
@@ -92,6 +99,14 @@ public class User implements Serializable {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getRole() {
+        return role != null ? role : "USER";
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     @NonNull
