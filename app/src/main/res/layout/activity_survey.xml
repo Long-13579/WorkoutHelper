@@ -112,7 +112,34 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
-            
+                <ToggleButton
+                    android:id="@+id/btnThursday"
+                    android:textOn="Thu"
+                    android:textOff="Thu"
+                    android:background="@drawable/day_toggle_selector"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ToggleButton
+                    android:id="@+id/btnFriday"
+                    android:textOn="Fri"
+                    android:textOff="Fri"
+                    android:background="@drawable/day_toggle_selector"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ToggleButton
+                    android:id="@+id/btnSaturday"
+                    android:textOn="Sat"
+                    android:textOff="Sat"
+                    android:background="@drawable/day_toggle_selector"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ToggleButton
                     android:id="@+id/btnSunday"
                     android:textOn="Sun"
                     android:textOff="Sun"
