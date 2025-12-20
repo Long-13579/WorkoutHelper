@@ -1,0 +1,33 @@
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="8dp"
+    android:stateListAnimator="@animator/card_press_anim">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="24dp"
+        android:background="@drawable/bg_gradient_ripple"
+        android:clickable="true"
+        android:contentDescription="Open Android dashboard">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_android"
+            android:tint="@android:color/white"/>
+
+        <TextView
+            style="@style/TextCardTitle"
+            android:text="Android Dashboard"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
