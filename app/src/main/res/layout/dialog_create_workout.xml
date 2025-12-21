@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -5,113 +6,50 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-    <!-- Label for Exercise -->
     <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Select Exercise"
-            android:textStyle="bold"
-            android:layout_marginBottom="4dp"/>
+            android:text="Exercise"
+            android:textStyle="bold" />
 
     <TextView
             android:id="@+id/textviewExercise"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_marginBottom="12dp" />
 
-    <!-- Label for Plan -->
     <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Select Plan"
-            android:textStyle="bold"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="4dp"/>
+            android:text="Plan"
+            android:textStyle="bold" />
 
     <Spinner
             android:id="@+id/spinnerPlan"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_marginBottom="12dp" />
 
-    <!-- Label for Date -->
     <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:text="Workout Date"
-            android:textStyle="bold"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="4dp"/>
+            android:textStyle="bold" />
 
     <EditText
             android:id="@+id/editDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
             android:focusable="false"
             android:clickable="true"
-            android:hint="Select date"
-            android:inputType="none"/>
-
-    <!-- Number of Sets -->
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Number of Sets"
-            android:textStyle="bold"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="4dp"/>
+            android:hint="Select date" />
 
     <EditText
             android:id="@+id/editSets"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:hint="Enter number of sets" />
-
-    <!-- Reps per Set -->
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Reps per Set"
-            android:textStyle="bold"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="4dp"/>
+            android:hint="Number of sets"
+            android:inputType="number" />
 
     <EditText
             android:id="@+id/editReps"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:hint="Enter reps per set" />
-
-    <!-- Training Volume -->
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Training Volume"
-            android:textStyle="bold"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="4dp"/>
+            android:hint="Reps per set"
+            android:inputType="number" />
 
     <EditText
             android:id="@+id/editVolume"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:hint="Enter training volume (kg)" />
-
-    <!-- Rest Time -->
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Rest time (seconds)"
-            android:textStyle="bold"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="4dp"/>
+            android:hint="Volume (kg)"
+            android:inputType="number" />
 
     <EditText
             android:id="@+id/editRestTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:hint="Enter rest time" />
-
+            android:hint="Rest time (seconds)"
+            android:inputType="number" />
 </LinearLayout>
