@@ -6,14 +6,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,12 +36,19 @@ import java.util.List;
 import java.util.Locale;
 
 public class ExerciseActivity extends AppCompatActivity {
-    ActivityExerciseBinding binding;
+
+    private static final String PREF_NAME = "MyPrefs";
+    private static final String KEY_USER_ID = "user_id";
+    private static final String KEY_SELECTED_DAY = "selectedDay";
+    private static final String DATE_FORMAT = "dd-MM-yyyy";
+
+    private ActivityExerciseBinding binding;
     private Exercise exercise;
-    private ArrayList<Plan> listPlan;
-    private int userId;
+    private final ArrayList<Plan> planList = new ArrayList<>();
+
     private PlanService planService;
     private WorkoutService workoutService;
+    private int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,88 +56,108 @@ public class ExerciseActivity extends AppCompatActivity {
         binding = ActivityExerciseBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Optional: Fullscreen image
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        );
 
-        getObject();
-        setVariables();
+        initServices();
+        initData();
+        initUI();
     }
 
-    private void getObject() {
+    /* ================= INIT ================= */
+
+    private void initServices() {
         planService = new PlanService();
         workoutService = new WorkoutService();
-
-        exercise = (Exercise) getIntent().getSerializableExtra("object");
-        getUserId();
-        listPlan = new ArrayList<>();
-        fetchListPlan();
     }
 
-    private void setVariables() {
-        // Set image
-        int resId = getResources().getIdentifier(exercise.getImageUrl(), "drawable", getPackageName());
+    private void initData() {
+        exercise = (Exercise) getIntent().getSerializableExtra("object");
+        userId = getUserId();
+        fetchPlans();
+    }
+
+    private void initUI() {
+        loadExerciseImage();
+        setupTexts();
+        setupTargetMuscles();
+        setupActions();
+    }
+
+    /* ================= UI ================= */
+
+    private void loadExerciseImage() {
+        int resId = getResources().getIdentifier(
+                exercise.getImageUrl(),
+                "drawable",
+                getPackageName()
+        );
         Glide.with(this).load(resId).into(binding.pic);
+    }
 
-        // Set title
+    private void setupTexts() {
         binding.titleTxt.setText(exercise.getName());
-
-        // Set back button
-        binding.backBtn.setOnClickListener(view -> finish());
-
-        // Set description if any (optional field)
-        if (exercise.getDescription() != null) {
-            binding.descriptionTxt.setText(exercise.getDescription());
-        } else {
-            binding.descriptionTxt.setText("No description available.");
-        }
-
-        // Set level (placeholder — update this based on your logic)
         binding.levelTxt.setText("Intermediate");
+        binding.descriptionTxt.setText(
+                exercise.getDescription() != null
+                        ? exercise.getDescription()
+                        : "No description available"
+        );
+    }
 
-        // Add target muscles
-        addMuscleIfNotNull(exercise.getTargetMuscle1());
-        addMuscleIfNotNull(exercise.getTargetMuscle2());
-        addMuscleIfNotNull(exercise.getTargetMuscle3());
+    private void setupTargetMuscles() {
+        addMuscle(exercise.getTargetMuscle1());
+        addMuscle(exercise.getTargetMuscle2());
+        addMuscle(exercise.getTargetMuscle3());
+    }
 
-        // Optional: button listener
-        binding.startBtn.setOnClickListener(v -> createWorkoutDialog());
+    private void setupActions() {
+        binding.backBtn.setOnClickListener(v -> finish());
+
+        binding.startBtn.setOnClickListener(v -> showCreateWorkoutDialog());
 
         binding.watchTutorialLayout.setOnClickListener(v -> {
-            String videoUrl = exercise.getVideoUrl();
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl));
-            startActivity(intent);
+            if (exercise.getVideoUrl() != null) {
+                startActivity(new Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(exercise.getVideoUrl())
+                ));
+            }
         });
-
     }
 
-    private void addMuscleIfNotNull(MuscleEnum muscle) {
-        if (muscle != null) {
-            TextView textView = new TextView(this);
-            textView.setText(muscle.toString());
-            textView.setTextColor(getResources().getColor(android.R.color.white));
-            textView.setTextSize(12);
-            textView.setPadding(8, 0, 8, 0);
-            binding.targetMuscleLayout.addView(textView);
-        }
+    private void addMuscle(MuscleEnum muscle) {
+        if (muscle == null) return;
+
+        TextView tv = new TextView(this);
+        tv.setText(muscle.toString());
+        tv.setTextColor(getColor(android.R.color.white));
+        tv.setTextSize(12);
+        tv.setPadding(12, 4, 12, 4);
+
+        binding.targetMuscleLayout.addView(tv);
     }
 
-    public void getUserId() {
-        SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        String currentUserId = prefs.getString("user_id", "-1");
-        userId = Integer.parseInt(currentUserId);
+    /* ================= DATA ================= */
+
+    private int getUserId() {
+        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        return Integer.parseInt(prefs.getString(KEY_USER_ID, "-1"));
     }
 
-    private void fetchListPlan() {
+    private void fetchPlans() {
         planService.getPlansByUserId(userId, new PlanService.ListPlanDataListener() {
             @Override
             public void onPlansLoaded(List<Plan> plans) {
-                listPlan.clear();
-                listPlan.addAll(plans);
+                planList.clear();
+                planList.addAll(plans);
             }
 
             @Override
             public void onError(String message) {
-                Toast.makeText(ExerciseActivity.this, message, Toast.LENGTH_SHORT).show();
+                toast(message);
             }
         });
     }
@@ -141,134 +166,144 @@ public class ExerciseActivity extends AppCompatActivity {
         workoutService.createWorkout(workout, new WorkoutService.WorkoutDataListener() {
             @Override
             public void onWorkoutLoaded(Workout workout) {
-                String message = "Create workout successfully";
-                Toast.makeText(ExerciseActivity.this, message, Toast.LENGTH_SHORT).show();
+                toast("Workout created successfully");
             }
 
             @Override
             public void onError(String message) {
-                Toast.makeText(ExerciseActivity.this, message, Toast.LENGTH_SHORT).show();
+                toast(message);
             }
         });
     }
 
-    private void createWorkoutDialog() {
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_create_workout, null);
+    /* ================= DIALOG ================= */
 
-        Spinner spinnerPlan = dialogView.findViewById(R.id.spinnerPlan);
-        TextView textExercise = dialogView.findViewById(R.id.textviewExercise);
-        EditText editDate = dialogView.findViewById(R.id.editDate);
-        EditText editSets = dialogView.findViewById(R.id.editSets);
-        EditText editReps = dialogView.findViewById(R.id.editReps);
-        EditText editVolume = dialogView.findViewById(R.id.editVolume);
-        EditText editRestTime = dialogView.findViewById(R.id.editRestTime);
+    private void showCreateWorkoutDialog() {
+        View view = getLayoutInflater().inflate(R.layout.dialog_create_workout, null);
 
-        // Set up Plan Spinner
-        ArrayAdapter<Plan> planAdapter = new ArrayAdapter<>(ExerciseActivity.this, android.R.layout.simple_spinner_item, listPlan);
-        planAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerPlan.setAdapter(planAdapter);
+        Spinner spinnerPlan = view.findViewById(R.id.spinnerPlan);
+        EditText editDate = view.findViewById(R.id.editDate);
+        EditText editSets = view.findViewById(R.id.editSets);
+        EditText editReps = view.findViewById(R.id.editReps);
+        EditText editVolume = view.findViewById(R.id.editVolume);
+        EditText editRest = view.findViewById(R.id.editRestTime);
+        TextView txtExercise = view.findViewById(R.id.textviewExercise);
 
-        // You might want to show the selected exercise name if already selected somewhere in your UI
-        Exercise selectedExercise = exercise; // Replace with your actual logic
-        if (selectedExercise != null) {
-            textExercise.setText(selectedExercise.getName());
-        }
+        txtExercise.setText(exercise.getName());
+        editDate.setText(getDefaultDate());
 
-        editDate.setText(getSelectedDay());
+        spinnerPlan.setAdapter(
+                new ArrayAdapter<>(
+                        this,
+                        android.R.layout.simple_spinner_item,
+                        planList
+                )
+        );
 
-        // Date Picker
-        editDate.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
-            new DatePickerDialog(ExerciseActivity.this, (view, year, month, dayOfMonth) -> {
-                calendar.set(year, month, dayOfMonth);
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-                editDate.setText(sdf.format(calendar.getTime()));
-            }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
-        });
+        editDate.setOnClickListener(v -> showDatePicker(editDate));
 
-        // Show dialog
-        new AlertDialog.Builder(ExerciseActivity.this)
-                .setTitle("Create Workout")
-                .setView(dialogView)
-                .setPositiveButton("Save", (dialog, which) -> {
-                    Plan selectedPlan = (Plan) spinnerPlan.getSelectedItem();
-                    Date selectedDate = null;
-                    try {
-                        SimpleDateFormat displayFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-                        Date displayDate = displayFormat.parse(editDate.getText().toString());
-
-                        SimpleDateFormat storageFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                        String storageDateStr = storageFormat.format(displayDate);
-
-                        selectedDate = storageFormat.parse(storageDateStr);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-
-                    // Get values from input fields
-                    String setsStr = editSets.getText().toString().trim();
-                    String repsStr = editReps.getText().toString().trim();
-                    String volumeStr = editVolume.getText().toString().trim();
-                    String restStr = editRestTime.getText().toString().trim();
-
-                    if (setsStr.isEmpty() || repsStr.isEmpty() || volumeStr.isEmpty() || restStr.isEmpty()) {
-                        Toast.makeText(ExerciseActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    int sets = Integer.parseInt(setsStr);
-                    int reps = Integer.parseInt(repsStr);
-                    int volume = Integer.parseInt(volumeStr);
-                    int restTime = Integer.parseInt(restStr);
-
-
-                    if (sets < 0 || reps < 1 || volume < 0 || restTime < 1) {
-                        String message = "Invalid input";
-                        Toast.makeText(ExerciseActivity.this, message, Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    // Create new Workout
-                    Workout newWorkout = new Workout(
-                            selectedPlan.getId(),
-                            0,
-                            selectedExercise.getId(),
-                            selectedPlan.getName(),
-                            selectedDate,
-                            selectedExercise,
-                            new ArrayList<>());
-
-                    newWorkout.setSets(generateSets(sets, selectedExercise.getId(), reps, volume, restTime));
-
-                    // Save to your list or database
-                    createWorkout(newWorkout);
-
-                })
+        new AlertDialog.Builder(this)
+                .setTitle("Add to Plan")
+                .setView(view)
+                .setPositiveButton("Save", (d, w) ->
+                        handleSave(
+                                spinnerPlan,
+                                editDate,
+                                editSets,
+                                editReps,
+                                editVolume,
+                                editRest
+                        )
+                )
                 .setNegativeButton("Cancel", null)
                 .show();
     }
 
-    public ArrayList<Set> generateSets(int numSet, int exerciseId, int repPerSet, int volume, int restTime) {
-        ArrayList<Set> result = new ArrayList<>();
-
-        for (int i = 0; i < numSet; i++) {
-            result.add(new Set(0, 0, exerciseId, volume, repPerSet, restTime));
+    private void handleSave(
+            Spinner spinnerPlan,
+            EditText editDate,
+            EditText editSets,
+            EditText editReps,
+            EditText editVolume,
+            EditText editRest
+    ) {
+        if (!isValid(editSets, editReps, editVolume, editRest)) {
+            toast("Please fill in all fields");
+            return;
         }
 
+        Plan plan = (Plan) spinnerPlan.getSelectedItem();
+        Date date = parseDate(editDate.getText().toString());
+
+        int sets = Integer.parseInt(editSets.getText().toString());
+        int reps = Integer.parseInt(editReps.getText().toString());
+        int volume = Integer.parseInt(editVolume.getText().toString());
+        int rest = Integer.parseInt(editRest.getText().toString());
+
+        Workout workout = new Workout(
+                plan.getId(),
+                0,
+                exercise.getId(),
+                plan.getName(),
+                date,
+                exercise,
+                generateSets(sets, reps, volume, rest)
+        );
+
+        createWorkout(workout);
+    }
+
+    /* ================= UTIL ================= */
+
+    private boolean isValid(EditText... fields) {
+        for (EditText e : fields) {
+            if (e.getText().toString().trim().isEmpty()) return false;
+        }
+        return true;
+    }
+
+    private ArrayList<Set> generateSets(int count, int reps, int volume, int rest) {
+        ArrayList<Set> result = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            result.add(new Set(0, 0, exercise.getId(), volume, reps, rest));
+        }
         return result;
     }
 
-    public String getSelectedDay() {
-        SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        String selectedDay = prefs.getString("selectedDay", null);
+    private void showDatePicker(EditText target) {
+        Calendar c = Calendar.getInstance();
+        new DatePickerDialog(
+                this,
+                (v, y, m, d) -> {
+                    c.set(y, m, d);
+                    target.setText(
+                            new SimpleDateFormat(DATE_FORMAT, Locale.getDefault())
+                                    .format(c.getTime())
+                    );
+                },
+                c.get(Calendar.YEAR),
+                c.get(Calendar.MONTH),
+                c.get(Calendar.DAY_OF_MONTH)
+        ).show();
+    }
 
-        if (selectedDay == null) {
-            SimpleDateFormat displayFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-            return displayFormat.format(new Date());
-        }
-        else {
-            return selectedDay;
+    private Date parseDate(String value) {
+        try {
+            return new SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).parse(value);
+        } catch (ParseException e) {
+            return new Date();
         }
     }
 
+    private String getDefaultDate() {
+        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        return prefs.getString(
+                KEY_SELECTED_DAY,
+                new SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(new Date())
+        );
+    }
+
+    private void toast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
 }
